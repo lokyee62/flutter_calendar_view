@@ -4,6 +4,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../calendar_event_data.dart';
 import '../constants.dart';
@@ -103,7 +104,7 @@ class FilledCell<T> extends StatelessWidget {
     this.isInMonth = false,
     this.shouldHighlight = false,
     this.backgroundColor = Colors.blue,
-    this.highlightColor = Colors.blue,
+    this.highlightColor = Colors.black,
     this.onTileTap,
     this.tileColor = Colors.blue,
     this.highlightRadius = 11,
@@ -132,7 +133,7 @@ class FilledCell<T> extends StatelessWidget {
                     : isInMonth
                         ? titleColor
                         : titleColor.withOpacity(0.4),
-                fontSize: 12,
+                fontSize: 14,
               ),
             ),
           ),
@@ -157,8 +158,8 @@ class FilledCell<T> extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4.0),
                           ),
                           margin: EdgeInsets.symmetric(
-                              vertical: 2.0, horizontal: 3.0),
-                          padding: const EdgeInsets.all(2.0),
+                              vertical: 2.0, horizontal: 4.0),
+                          padding: const EdgeInsets.all(4.0),
                           alignment: Alignment.center,
                           child: Row(
                             children: [
@@ -166,10 +167,10 @@ class FilledCell<T> extends StatelessWidget {
                                 child: Text(
                                   events[index].title,
                                   overflow: TextOverflow.clip,
-                                  maxLines: 1,
+                                  maxLines: 2,
                                   style: TextStyle(
                                     color: events[index].color.accent,
-                                    fontSize: 12,
+                                    fontSize: 14,
                                   ),
                                 ),
                               ),
@@ -197,10 +198,14 @@ class MonthPageHeader extends CalendarPageHeader {
     VoidCallback? onPreviousMonth,
     Color iconColor = Constants.black,
     Color backgroundColor = Constants.headerBackground,
+    required String locale,
+    required String displayFormat,
     required DateTime date,
   }) : super(
           key: key,
           date: date,
+          locale: locale,
+          displayFormat: displayFormat,
           onNextDay: onNextMonth,
           onPreviousDay: onPreviousMonth,
           onTitleTapped: onTitleTapped,
@@ -208,8 +213,10 @@ class MonthPageHeader extends CalendarPageHeader {
           backgroundColor: backgroundColor,
           dateStringBuilder: MonthPageHeader._monthStringBuilder,
         );
-  static String _monthStringBuilder(DateTime date, {DateTime? secondaryDate}) =>
-      "${date.month} - ${date.year}";
+  static String _monthStringBuilder(
+          DateTime date, String displayFormat, String locale,
+          {DateTime? secondaryDate}) =>
+      DateFormat(displayFormat, locale).format(date);
 }
 
 class WeekDayTile extends StatelessWidget {
@@ -225,13 +232,16 @@ class WeekDayTile extends StatelessWidget {
   /// Style for week day string.
   final TextStyle? textStyle;
 
+  final List<String> days;
+
   /// Title for week day in month view.
   const WeekDayTile({
     Key? key,
     required this.dayIndex,
-    this.backgroundColor = Constants.white,
+    this.backgroundColor = Colors.black12,
     this.displayBorder = true,
     this.textStyle,
+    required this.days,
   }) : super(key: key);
 
   @override
@@ -248,7 +258,8 @@ class WeekDayTile extends StatelessWidget {
         ),
       ),
       child: Text(
-        Constants.weekTitles[dayIndex],
+        //Constants.weekTitles[dayIndex],
+        days[dayIndex],
         style: textStyle ??
             TextStyle(
               fontSize: 17,

@@ -112,15 +112,21 @@ class TimeLine extends StatelessWidget {
 
   static DateTime get _date => DateTime.now();
 
+  final String displayFormat;
+
+  final String locale;
+
   /// Time line to display time at left side of day or week view.
-  const TimeLine(
-      {Key? key,
-      required this.timeLineWidth,
-      required this.hourHeight,
-      required this.height,
-      required this.timeLineOffset,
-      required this.timeLineBuilder})
-      : super(key: key);
+  const TimeLine({
+    Key? key,
+    required this.timeLineWidth,
+    required this.hourHeight,
+    required this.height,
+    required this.timeLineOffset,
+    required this.timeLineBuilder,
+    required this.displayFormat,
+    required this.locale,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +156,8 @@ class TimeLine extends StatelessWidget {
                     _date.day,
                     i,
                   ),
+                  displayFormat,
+                  locale,
                 ),
               ),
             ),
@@ -182,6 +190,10 @@ class EventGenerator<T> extends StatelessWidget {
   /// Defines date for which events will be displayed in given display area.
   final DateTime date;
 
+  final String displayFormat;
+
+  final String locale;
+
   /// Called when user taps on event tile.
   final CellTapCallback<T>? onTileTap;
 
@@ -195,6 +207,8 @@ class EventGenerator<T> extends StatelessWidget {
     required this.eventArranger,
     required this.eventTileBuilder,
     required this.date,
+    required this.displayFormat,
+    required this.locale,
     required this.onTileTap,
   }) : super(key: key);
 
@@ -219,6 +233,8 @@ class EventGenerator<T> extends StatelessWidget {
           onTap: () => onTileTap?.call(events[index].events, date),
           child: eventTileBuilder(
             date,
+            displayFormat,
+            locale,
             events[index].events,
             Rect.fromLTWH(
                 events[index].left,

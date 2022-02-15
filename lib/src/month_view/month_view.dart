@@ -3,6 +3,7 @@
 // that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../calendar_constants.dart';
 import '../calendar_controller_provider.dart';
@@ -100,6 +101,10 @@ class MonthView<T> extends StatefulWidget {
   /// Defines aspect ratio of day cells in month calendar page.
   final double cellAspectRatio;
 
+  final String displayFormat;
+
+  final String locale;
+
   /// Width of month view.
   ///
   /// If null is provided then It will take width of closest [MediaQuery].
@@ -122,6 +127,8 @@ class MonthView<T> extends StatefulWidget {
     this.pageTransitionDuration = const Duration(milliseconds: 300),
     this.pageTransitionCurve = Curves.ease,
     this.width,
+    required this.displayFormat,
+    required this.locale,
     this.onPageChange,
     this.onCellTap,
     this.onEventTap,
@@ -162,9 +169,13 @@ class MonthViewState<T> extends State<MonthView<T>> {
 
   late VoidCallback _reloadCallback;
 
+  late List<String> _days;
+
   @override
   void initState() {
     super.initState();
+
+    _days = DateFormat.EEEE(widget.locale.toString()).dateSymbols.SHORTWEEKDAYS;
 
     _reloadCallback = _reload;
 
@@ -253,7 +264,8 @@ class MonthViewState<T> extends State<MonthView<T>> {
           children: [
             Container(
               width: _width,
-              child: _headerBuilder(_currentDate),
+              child: _headerBuilder(
+                  _currentDate, widget.displayFormat, widget.locale),
             ),
             Expanded(
               child: PageView.builder(
@@ -338,7 +350,8 @@ class MonthViewState<T> extends State<MonthView<T>> {
   }
 
   /// Default month view header builder
-  Widget _defaultHeaderBuilder(DateTime date) {
+  Widget _defaultHeaderBuilder(
+      DateTime date, String displayFormat, String locale) {
     return MonthPageHeader(
       onTitleTapped: () async {
         final selectedDate = await showDatePicker(
@@ -354,6 +367,8 @@ class MonthViewState<T> extends State<MonthView<T>> {
       onPreviousMonth: previousPage,
       date: date,
       onNextMonth: nextPage,
+      displayFormat: displayFormat,
+      locale: locale,
     );
   }
 
@@ -361,6 +376,7 @@ class MonthViewState<T> extends State<MonthView<T>> {
   Widget _defaultWeekDayBuilder(int index) {
     return WeekDayTile(
       dayIndex: index,
+      days: _days,
     );
   }
 

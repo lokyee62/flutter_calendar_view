@@ -65,6 +65,10 @@ class InternalDayViewPage<T> extends StatelessWidget {
   /// Called when user taps on event tile.
   final CellTapCallback<T>? onTileTap;
 
+  final String displayFormat;
+
+  final String locale;
+
   /// Defines a single day page.
   const InternalDayViewPage({
     Key? key,
@@ -85,6 +89,8 @@ class InternalDayViewPage<T> extends StatelessWidget {
     required this.eventArranger,
     required this.verticalLineOffset,
     required this.onTileTap,
+    required this.displayFormat,
+    required this.locale,
   }) : super(key: key);
 
   @override
@@ -118,6 +124,8 @@ class InternalDayViewPage<T> extends StatelessWidget {
             child: EventGenerator<T>(
               height: height,
               date: date,
+              displayFormat: displayFormat,
+              locale: locale,
               onTileTap: onTileTap,
               eventArranger: eventArranger,
               events: controller.getEventsOnDay(date),
@@ -135,6 +143,8 @@ class InternalDayViewPage<T> extends StatelessWidget {
             timeLineBuilder: timeLineBuilder,
             timeLineOffset: timeLineOffset,
             timeLineWidth: timeLineWidth,
+            displayFormat: displayFormat,
+            locale: locale,
             key: ValueKey(heightPerMinute),
           ),
         ],

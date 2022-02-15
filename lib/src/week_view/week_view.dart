@@ -87,6 +87,10 @@ class WeekView<T> extends StatefulWidget {
   /// Called when user taps on event tile.
   final CellTapCallback<T>? onEventTap;
 
+  final String displayFormat;
+
+  final String locale;
+
   /// Main widget for week view.
   const WeekView({
     Key? key,
@@ -112,6 +116,8 @@ class WeekView<T> extends StatefulWidget {
     this.weekDayBuilder,
     this.backgroundColor = Colors.white,
     this.onEventTap,
+    required this.displayFormat,
+    required this.locale,
   }) : super(key: key);
 
   @override
@@ -253,7 +259,8 @@ class WeekViewState<T> extends State<WeekView<T>> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _weekHeaderBuilder(_currentStartDate, _currentEndDate),
+              _weekHeaderBuilder(_currentStartDate, _currentEndDate,
+                  widget.displayFormat, widget.locale),
               Expanded(
                 child: SizedBox(
                   height: _height,
@@ -291,6 +298,8 @@ class WeekViewState<T> extends State<WeekView<T>> {
                         controller: _controller,
                         hourHeight: _hourHeight,
                         eventArranger: _eventArranger,
+                        displayFormat: widget.displayFormat,
+                        locale: widget.locale,
                       );
                     },
                   ),
@@ -317,7 +326,8 @@ class WeekViewState<T> extends State<WeekView<T>> {
   }
 
   /// Default builder for week line.
-  Widget _defaultWeekDayBuilder(DateTime date) {
+  Widget _defaultWeekDayBuilder(
+      DateTime date, String displayFormat, String locale) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -333,7 +343,8 @@ class WeekViewState<T> extends State<WeekView<T>> {
   /// Default timeline builder this builder will be used if
   /// [widget.eventTileBuilder] is null
   ///
-  Widget _defaultTimeLineBuilder(DateTime date) {
+  Widget _defaultTimeLineBuilder(
+      DateTime date, String displayFormat, String locale) {
     return Transform.translate(
       offset: Offset(0, -7.5),
       child: Padding(
@@ -353,6 +364,8 @@ class WeekViewState<T> extends State<WeekView<T>> {
   /// [widget.eventTileBuilder] is null
   Widget _defaultEventTileBuilder<T>(
       DateTime date,
+      String displayFormat,
+      String locale,
       List<CalendarEventData<T>> events,
       Rect boundary,
       DateTime startDuration,
@@ -362,7 +375,7 @@ class WeekViewState<T> extends State<WeekView<T>> {
         borderRadius: BorderRadius.circular(6.0),
         title: events[0].title,
         titleStyle: TextStyle(
-          fontSize: 12,
+          fontSize: 14,
           color: events[0].color.accent,
         ),
         totalEvents: events.length,
@@ -375,10 +388,13 @@ class WeekViewState<T> extends State<WeekView<T>> {
 
   /// Default view header builder. This builder will be used if
   /// [widget.dayTitleBuilder] is null.
-  Widget _defaultWeekPageHeaderBuilder(DateTime startDate, DateTime endDate) {
+  Widget _defaultWeekPageHeaderBuilder(DateTime startDate, DateTime endDate,
+      String displayFormat, String locale) {
     return WeekPageHeader(
       startDate: _currentStartDate,
       endDate: _currentEndDate,
+      displayFormat: displayFormat,
+      locale: locale,
       onNextDay: nextPage,
       onPreviousDay: previousPage,
       onTitleTapped: () async {

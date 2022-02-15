@@ -16,16 +16,22 @@ class WeekPageHeader extends CalendarPageHeader {
     VoidCallback? onPreviousDay,
     required DateTime startDate,
     required DateTime endDate,
+    required String displayFormat,
+    required String locale,
   }) : super(
           key: key,
           date: startDate,
+          displayFormat: displayFormat,
+          locale: locale,
           secondaryDate: endDate,
           onNextDay: onNextDay,
           onPreviousDay: onPreviousDay,
           onTitleTapped: onTitleTapped,
           dateStringBuilder: WeekPageHeader._weekStringBuilder,
         );
-  static String _weekStringBuilder(DateTime date, {DateTime? secondaryDate}) =>
+  static String _weekStringBuilder(
+          DateTime date, String displayFormat, String locale,
+          {DateTime? secondaryDate}) =>
       "${date.day} / ${date.month} / ${date.year} to "
       "${secondaryDate != null ? "${secondaryDate.day} / "
           "${secondaryDate.month} / ${secondaryDate.year}" : ""}";

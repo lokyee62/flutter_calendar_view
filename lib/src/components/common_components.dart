@@ -21,6 +21,10 @@ class CalendarPageHeader extends StatelessWidget {
   /// Date of month/day.
   final DateTime date;
 
+  final String locale;
+
+  final String displayFormat;
+
   /// Secondary date. This date will be used when we need to define a
   /// range of dates.
   /// [date] can be starting date and [secondaryDate] can be end date.
@@ -40,6 +44,8 @@ class CalendarPageHeader extends StatelessWidget {
   const CalendarPageHeader({
     Key? key,
     required this.date,
+    required this.locale,
+    required this.displayFormat,
     required this.dateStringBuilder,
     this.onNextDay,
     this.onTitleTapped,
@@ -77,7 +83,8 @@ class CalendarPageHeader extends StatelessWidget {
             child: InkWell(
               onTap: onTitleTapped,
               child: Text(
-                dateStringBuilder(date, secondaryDate: secondaryDate),
+                dateStringBuilder(date, displayFormat, locale,
+                    secondaryDate: secondaryDate),
                 textAlign: TextAlign.center,
               ),
             ),

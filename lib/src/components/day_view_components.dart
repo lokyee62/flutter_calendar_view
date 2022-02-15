@@ -122,9 +122,13 @@ class DayPageHeader extends CalendarPageHeader {
     Color iconColor = Constants.black,
     Color backgroundColor = Constants.headerBackground,
     required DateTime date,
+    required String locale,
+    required String displayFormat,
   }) : super(
           key: key,
           date: date,
+          displayFormat: displayFormat,
+          locale: locale,
           backgroundColor: backgroundColor,
           iconColor: iconColor,
           onNextDay: onNextDay,
@@ -132,13 +136,17 @@ class DayPageHeader extends CalendarPageHeader {
           onTitleTapped: onTitleTapped,
           dateStringBuilder: DayPageHeader._dayStringBuilder,
         );
-  static String _dayStringBuilder(DateTime date, {DateTime? secondaryDate}) =>
+  static String _dayStringBuilder(
+          DateTime date, String displayFormat, String locale,
+          {DateTime? secondaryDate}) =>
       "${date.day} - ${date.month} - ${date.year}";
 }
 
 class DefaultTimeLineMark extends StatelessWidget {
   /// Defines time to display
   final DateTime date;
+  final String displayFormat;
+  final String locale;
 
   /// Text style for time string.
   final TextStyle? markingStyle;
@@ -147,6 +155,8 @@ class DefaultTimeLineMark extends StatelessWidget {
   const DefaultTimeLineMark({
     Key? key,
     required this.date,
+    required this.displayFormat,
+    required this.locale,
     this.markingStyle,
   }) : super(key: key);
 

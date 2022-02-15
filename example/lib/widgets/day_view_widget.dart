@@ -18,6 +18,8 @@ class DayViewWidget extends StatelessWidget {
     return DayView<Event>(
       key: state,
       width: width,
+      locale: 'en',
+      displayFormat: 'dd',
     );
   }
 }

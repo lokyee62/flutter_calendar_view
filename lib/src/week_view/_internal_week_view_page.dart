@@ -74,6 +74,10 @@ class InternalWeekViewPage<T> extends StatelessWidget {
   /// Called when user taps on event tile.
   final CellTapCallback<T>? onTileTap;
 
+  final String displayFormat;
+
+  final String locale;
+
   /// A single page for week view.
   const InternalWeekViewPage({
     Key? key,
@@ -97,6 +101,8 @@ class InternalWeekViewPage<T> extends StatelessWidget {
     required this.verticalLineOffset,
     required this.weekTitleWidth,
     required this.onTileTap,
+    required this.displayFormat,
+    required this.locale,
   }) : super(key: key);
 
   @override
@@ -123,6 +129,8 @@ class InternalWeekViewPage<T> extends StatelessWidget {
                     width: weekTitleWidth,
                     child: weekDayBuilder(
                       dates[index],
+                      displayFormat,
+                      locale,
                     ),
                   ),
                 )
@@ -185,6 +193,8 @@ class InternalWeekViewPage<T> extends StatelessWidget {
                                   events:
                                       controller.getEventsOnDay(dates[index]),
                                   heightPerMinute: heightPerMinute,
+                                  displayFormat: displayFormat,
+                                  locale: locale,
                                 ),
                               ),
                             )
@@ -198,6 +208,8 @@ class InternalWeekViewPage<T> extends StatelessWidget {
                       height: height,
                       timeLineOffset: timeLineOffset,
                       timeLineBuilder: timeLineBuilder,
+                      displayFormat: displayFormat,
+                      locale: locale,
                     ),
                   ],
                 ),

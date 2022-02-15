@@ -123,6 +123,10 @@ class DayView<T> extends StatefulWidget {
   /// This method will be called when user taps on event tile.
   final CellTapCallback<T>? onEventTap;
 
+  final String displayFormat;
+
+  final String locale;
+
   /// Main widget for day view.
   const DayView({
     Key? key,
@@ -147,6 +151,8 @@ class DayView<T> extends StatefulWidget {
     this.eventArranger,
     this.verticalLineOffset = 10,
     this.backgroundColor = Colors.white,
+    required this.displayFormat,
+    required this.locale,
     this.onEventTap,
   })  : assert((timeLineOffset) >= 0,
             "timeLineOffset must be greater than or equal to 0"),
@@ -279,7 +285,8 @@ class DayViewState<T> extends State<DayView<T>> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _dayTitleBuilder(_currentDate),
+              _dayTitleBuilder(
+                  _currentDate, widget.displayFormat, widget.locale),
               Expanded(
                 child: SingleChildScrollView(
                   child: SizedBox(
@@ -312,6 +319,8 @@ class DayViewState<T> extends State<DayView<T>> {
                           height: _height,
                           controller: _controller,
                           hourHeight: _hourHeight,
+                          displayFormat: widget.displayFormat,
+                          locale: widget.locale,
                           eventArranger: _eventArranger,
                         );
                       },
@@ -343,13 +352,17 @@ class DayViewState<T> extends State<DayView<T>> {
   /// Default timeline builder this builder will be used if
   /// [widget.eventTileBuilder] is null
   ///
-  Widget _defaultTimeLineBuilder(date) => DefaultTimeLineMark(date: date);
+  Widget _defaultTimeLineBuilder(date, displayFormat, locale) =>
+      DefaultTimeLineMark(
+          date: date, displayFormat: displayFormat, locale: locale);
 
   /// Default timeline builder. This builder will be used if
   /// [widget.eventTileBuilder] is null
   ///
   Widget _defaultEventTileBuilder(
     DateTime date,
+    String displayFormat,
+    String locale,
     List<CalendarEventData<T>> events,
     Rect boundary,
     DateTime startDuration,
@@ -372,9 +385,12 @@ class DayViewState<T> extends State<DayView<T>> {
   /// Default view header builder. This builder will be used if
   /// [widget.dayTitleBuilder] is null.
   ///
-  Widget _defaultDayBuilder(DateTime date) {
+  Widget _defaultDayBuilder(
+      DateTime date, String displayFormat, String locale) {
     return DayPageHeader(
       date: _currentDate,
+      displayFormat: displayFormat,
+      locale: locale,
       onNextDay: nextPage,
       onPreviousDay: previousPage,
       onTitleTapped: () async {

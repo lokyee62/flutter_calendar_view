@@ -15,6 +15,8 @@ typedef CellBuilder<T> = Widget Function(
 
 typedef EventTileBuilder<T> = Widget Function(
   DateTime date,
+  String locale,
+  String displayFormat,
   List<CalendarEventData<T>> events,
   Rect boundary,
   DateTime startDuration,
@@ -27,6 +29,8 @@ typedef WeekDayBuilder = Widget Function(
 
 typedef DateWidgetBuilder = Widget Function(
   DateTime date,
+  String displayFormat,
+  String locale,
 );
 
 typedef CalendarPageChangeCallBack = void Function(DateTime date, int page);
@@ -36,11 +40,12 @@ typedef PageChangeCallback = void Function(
   CalendarEventData event,
 );
 
-typedef StringProvider = String Function(DateTime date,
+typedef StringProvider = String Function(
+    DateTime date, String displayFormat, String locale,
     {DateTime? secondaryDate});
 
 typedef WeekPageHeaderBuilder = Widget Function(
-    DateTime startDate, DateTime endDate);
+    DateTime startDate, DateTime endDate, String displayFormat, String locale);
 
 typedef TileTapCallback<T> = void Function(
     CalendarEventData<T> event, DateTime date);
