@@ -1,5 +1,7 @@
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 import 'model/event.dart';
 import 'pages/mobile/mobile_home_page.dart';
@@ -16,10 +18,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final locale = Locale.fromSubtags(languageCode: 'zh', countryCode: 'HK');
+    Intl.defaultLocale =
+        const Locale.fromSubtags(languageCode: 'zh', countryCode: 'HK')
+            .toString();
+
+    initializeDateFormatting();
+
     return CalendarControllerProvider<Event>(
       controller: EventController<Event>()..addAll(_events),
       child: MaterialApp(
         title: 'Flutter Calendar Page Demo',
+        locale: locale,
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light(),
         home: ResponsiveWidget(

@@ -2,6 +2,7 @@
 // Use of this source code is governed by a MIT-style license
 // that can be found in the LICENSE file.
 
+import 'package:calendar_view/src/enumerations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -176,7 +177,7 @@ class WeekViewState<T> extends State<WeekView<T>> {
       _initialDay = _maxDate;
     }
 
-    final dates = _initialDay.datesOfWeek();
+    final dates = _initialDay.datesOfWeek(startDay: WeekDays.sunday);
     _currentStartDate = dates.first;
     _currentEndDate = dates.last;
 
@@ -272,7 +273,7 @@ class WeekViewState<T> extends State<WeekView<T>> {
                     itemBuilder: (_, index) {
                       final dates = _minDate
                           .add(Duration(days: (index - 1) * _weekDays))
-                          .datesOfWeek();
+                          .datesOfWeek(startDay: WeekDays.sunday);
 
                       return InternalWeekViewPage<T>(
                         key: ValueKey(

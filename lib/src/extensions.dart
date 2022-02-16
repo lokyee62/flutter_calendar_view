@@ -67,7 +67,8 @@ extension DateTimeExtensions on DateTime {
   List<DateTime> get datesOfMonths {
     final monthDays = <DateTime>[];
     for (var i = 1, start = 1; i < 7; i++, start += 7) {
-      monthDays.addAll(DateTime(year, month, start).datesOfWeek());
+      monthDays.addAll(
+          DateTime(year, month, start).datesOfWeek(startDay: WeekDays.sunday));
     }
     return monthDays;
   }
