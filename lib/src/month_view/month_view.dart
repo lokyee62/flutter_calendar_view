@@ -305,6 +305,7 @@ class MonthViewState<T> extends State<MonthView<T>> {
                               cellBuilder: _cellBuilder,
                               cellRatio: widget.cellAspectRatio,
                               date: date,
+                              minMonth: widget.minMonth,
                               showBorder: widget.showBorder,
                             ),
                           ),
@@ -382,11 +383,15 @@ class MonthViewState<T> extends State<MonthView<T>> {
 
   /// Default cell builder. Used when [widget.cellBuilder] is null
   Widget _defaultCellBuilder<T>(
-      date, List<CalendarEventData<T>> events, isToday, isInMonth) {
+      date, List<CalendarEventData<T>> events, isToday, isInMonth, isEnabled) {
     return FilledCell<T>(
       date: date,
       shouldHighlight: isToday,
-      backgroundColor: isInMonth ? Constants.white : Constants.offWhite,
+      backgroundColor: !isEnabled
+          ? Constants.grey
+          : isInMonth
+              ? Constants.white
+              : Constants.offWhite,
       events: events,
       onTileTap: widget.onEventTap as TileTapCallback<T>?,
     );
@@ -468,6 +473,7 @@ class MonthViewState<T> extends State<MonthView<T>> {
 
 /// A single month page.
 class _MonthPageBuilder<T> extends StatelessWidget {
+  final DateTime? minMonth;
   final double cellRatio;
   final bool showBorder;
   final double borderSize;
@@ -481,6 +487,7 @@ class _MonthPageBuilder<T> extends StatelessWidget {
 
   const _MonthPageBuilder({
     Key? key,
+    required this.minMonth,
     required this.cellRatio,
     required this.showBorder,
     required this.borderSize,
@@ -496,6 +503,7 @@ class _MonthPageBuilder<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final monthDays = date.datesOfMonths;
+
     return Container(
       width: width,
       height: height,
@@ -509,8 +517,13 @@ class _MonthPageBuilder<T> extends StatelessWidget {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           final events = controller.getEventsOnDay(monthDays[index]);
+          final isValidDate = !(minMonth != null &&
+              monthDays[index].isBefore(DateUtils.dateOnly(minMonth!)));
+
           return GestureDetector(
-            onTap: () => onCellTap?.call(events, monthDays[index]),
+            onTap: isValidDate
+                ? () => onCellTap?.call(events, monthDays[index])
+                : null,
             child: Container(
               decoration: BoxDecoration(
                 border: showBorder
@@ -525,6 +538,7 @@ class _MonthPageBuilder<T> extends StatelessWidget {
                 events,
                 monthDays[index].compareWithoutTime(DateTime.now()),
                 monthDays[index].month == date.month,
+                isValidDate,
               ),
             ),
           );
