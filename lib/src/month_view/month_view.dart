@@ -105,7 +105,7 @@ class MonthView<T> extends StatefulWidget {
 
   final String locale;
 
-  final bool isShowTapped;
+  final bool? isShowTapped;
 
   final List<DateTime>? disabledDates;
 
@@ -138,7 +138,7 @@ class MonthView<T> extends StatefulWidget {
     this.onPageChange,
     this.onCellTap,
     this.onEventTap,
-    required this.isShowTapped,
+    this.isShowTapped,
     this.disabledDates,
     this.disabledWeekdays,
   }) : super(key: key);
@@ -179,6 +179,8 @@ class MonthViewState<T> extends State<MonthView<T>> {
   late VoidCallback _reloadCallback;
 
   late List<String> _days;
+
+  late bool _isShowTapped;
 
   late DateTime _selectedDate = DateTime.now();
 
@@ -239,6 +241,8 @@ class MonthViewState<T> extends State<MonthView<T>> {
     // This widget will be displayed on top of the page.
     // from where user can see month and change month.
     _headerBuilder = widget.headerBuilder ?? _defaultHeaderBuilder;
+
+    _isShowTapped = widget.isShowTapped ?? false;
 
     _disabledDates = widget.disabledDates ?? [];
 
@@ -332,7 +336,7 @@ class MonthViewState<T> extends State<MonthView<T>> {
                               minMonth: widget.minMonth,
                               showBorder: widget.showBorder,
                               selectedDate: _selectedDate,
-                              isShowTapped: widget.isShowTapped,
+                              isShowTapped: _isShowTapped,
                               disabledDates: _disabledDates,
                               disabledWeekdays: _disabledWeekdays,
                             ),
