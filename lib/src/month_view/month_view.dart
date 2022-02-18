@@ -105,6 +105,12 @@ class MonthView<T> extends StatefulWidget {
 
   final String locale;
 
+  final bool isShowTapped;
+
+  final List<DateTime>? disabledDates;
+
+  final List<int>? disabledWeekdays;
+
   /// Width of month view.
   ///
   /// If null is provided then It will take width of closest [MediaQuery].
@@ -132,6 +138,9 @@ class MonthView<T> extends StatefulWidget {
     this.onPageChange,
     this.onCellTap,
     this.onEventTap,
+    required this.isShowTapped,
+    this.disabledDates,
+    this.disabledWeekdays,
   }) : super(key: key);
 
   @override
@@ -170,6 +179,12 @@ class MonthViewState<T> extends State<MonthView<T>> {
   late VoidCallback _reloadCallback;
 
   late List<String> _days;
+
+  late DateTime _selectedDate = DateTime.now();
+
+  late List<DateTime> _disabledDates;
+
+  late List<int> _disabledWeekdays;
 
   @override
   void initState() {
@@ -224,6 +239,10 @@ class MonthViewState<T> extends State<MonthView<T>> {
     // This widget will be displayed on top of the page.
     // from where user can see month and change month.
     _headerBuilder = widget.headerBuilder ?? _defaultHeaderBuilder;
+
+    _disabledDates = widget.disabledDates ?? [];
+
+    _disabledWeekdays = widget.disabledWeekdays ?? [];
   }
 
   @override
@@ -296,7 +315,12 @@ class MonthViewState<T> extends State<MonthView<T>> {
                             width: _width,
                             child: _MonthPageBuilder<T>(
                               key: ValueKey(date.toIso8601String()),
-                              onCellTap: widget.onCellTap,
+                              onCellTap: (list, dt) {
+                                setState(() {
+                                  _selectedDate = dt;
+                                });
+                                widget.onCellTap?.call(list, dt);
+                              },
                               width: _width,
                               height: _height,
                               controller: _controller,
@@ -307,6 +331,10 @@ class MonthViewState<T> extends State<MonthView<T>> {
                               date: date,
                               minMonth: widget.minMonth,
                               showBorder: widget.showBorder,
+                              selectedDate: _selectedDate,
+                              isShowTapped: widget.isShowTapped,
+                              disabledDates: _disabledDates,
+                              disabledWeekdays: _disabledWeekdays,
                             ),
                           ),
                         ),
@@ -484,6 +512,10 @@ class _MonthPageBuilder<T> extends StatelessWidget {
   final double width;
   final double height;
   final CellTapCallback<T>? onCellTap;
+  final DateTime selectedDate;
+  final bool isShowTapped;
+  final List<DateTime> disabledDates;
+  final List<int> disabledWeekdays;
 
   const _MonthPageBuilder({
     Key? key,
@@ -498,6 +530,10 @@ class _MonthPageBuilder<T> extends StatelessWidget {
     required this.width,
     required this.height,
     required this.onCellTap,
+    required this.selectedDate,
+    required this.isShowTapped,
+    required this.disabledDates,
+    required this.disabledWeekdays,
   }) : super(key: key);
 
   @override
@@ -519,6 +555,10 @@ class _MonthPageBuilder<T> extends StatelessWidget {
           final events = controller.getEventsOnDay(monthDays[index]);
           final isValidDate = !(minMonth != null &&
               monthDays[index].isBefore(DateUtils.dateOnly(minMonth!)));
+          final isDisabledDate =
+              disabledDates.contains(DateUtils.dateOnly(monthDays[index]));
+          final isDisabledWeekday = events.isEmpty &&
+              disabledWeekdays.contains(monthDays[index].weekday);
 
           return GestureDetector(
             onTap: isValidDate
@@ -526,18 +566,26 @@ class _MonthPageBuilder<T> extends StatelessWidget {
                 : null,
             child: Container(
               decoration: BoxDecoration(
-                border: showBorder
+                border: monthDays[index].compareWithoutTime(selectedDate) &&
+                        isShowTapped
                     ? Border.all(
-                        color: borderColor,
-                        width: borderSize,
+                        color: Constants.headerBackground,
+                        width: borderSize + 1,
                       )
-                    : null,
+                    : showBorder
+                        ? Border.all(
+                            color: borderColor,
+                            width: borderSize,
+                          )
+                        : null,
               ),
               child: cellBuilder(
                 monthDays[index],
                 events,
                 monthDays[index].compareWithoutTime(DateTime.now()),
-                monthDays[index].month == date.month,
+                monthDays[index].month == date.month &&
+                    !isDisabledDate &&
+                    !isDisabledWeekday,
                 isValidDate,
               ),
             ),

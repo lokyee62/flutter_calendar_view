@@ -165,7 +165,7 @@ class FilledCell<T> extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  events[index].title,
+                                  events[index].title ?? '',
                                   overflow: TextOverflow.clip,
                                   maxLines: 2,
                                   style: TextStyle(

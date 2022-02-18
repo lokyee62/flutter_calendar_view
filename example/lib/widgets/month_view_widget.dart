@@ -18,8 +18,11 @@ class MonthViewWidget extends StatelessWidget {
     return MonthView<Event>(
       key: state,
       width: width,
-      displayFormat: 'MMM YYYY',
+      displayFormat: 'MMM y',
       locale: 'en',
+      isShowTapped: true,
+      disabledDates: [DateTime(2022, 2, 17)],
+      disabledWeekdays: [2],
     );
   }
 }

@@ -24,10 +24,10 @@ class CalendarEventData<T> {
   final DateTime? endTime;
 
   /// Title of the event.
-  final String title;
+  final String? title;
 
   /// Description of the event.
-  final String description;
+  final String? description;
 
   /// Defines color of event.
   /// This color will be used in default widgets provided by plugin.
@@ -40,7 +40,7 @@ class CalendarEventData<T> {
 
   /// Stores all the events on [date]
   const CalendarEventData({
-    required this.title,
+    this.title = "",
     this.description = "",
     this.event,
     this.color = Colors.blue,

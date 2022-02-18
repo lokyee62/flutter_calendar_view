@@ -15,7 +15,7 @@ class DetailsPage extends StatelessWidget {
         elevation: 0,
         centerTitle: false,
         title: Text(
-          event.title,
+          event.title ?? '',
           style: TextStyle(
             color: event.color.accentColor,
             fontSize: 20.0,
@@ -82,7 +82,7 @@ class DetailsPage extends StatelessWidget {
             SizedBox(
               height: 10.0,
             ),
-            Text(event.description),
+            Text(event.description ?? ''),
           ]
         ],
       ),

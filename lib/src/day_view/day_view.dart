@@ -371,9 +371,9 @@ class DayViewState<T> extends State<DayView<T>> {
     if (events.isNotEmpty)
       return RoundedEventTile(
         borderRadius: BorderRadius.circular(10.0),
-        title: events[0].title,
+        title: events[0].title ?? '',
         totalEvents: events.length - 1,
-        description: events[0].description,
+        description: events[0].description ?? '',
         padding: EdgeInsets.all(10.0),
         backgroundColor: events[0].color,
         margin: EdgeInsets.all(2.0),
