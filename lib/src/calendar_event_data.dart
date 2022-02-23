@@ -36,6 +36,8 @@ class CalendarEventData<T> {
   /// Event on [date].
   final T? event;
 
+  final Widget? child;
+
   final DateTime? _endDate;
 
   /// Stores all the events on [date]
@@ -46,6 +48,7 @@ class CalendarEventData<T> {
     this.color = Colors.blue,
     this.startTime,
     this.endTime,
+    this.child,
     DateTime? endDate,
     required this.date,
   }) : _endDate = endDate;
@@ -60,6 +63,7 @@ class CalendarEventData<T> {
         "title": title,
         "description": description,
         "endDate": endDate,
+        "child": child,
       };
 
   @override
@@ -72,7 +76,8 @@ class CalendarEventData<T> {
         endDate.compareWithoutTime(other.endDate) &&
         event == other.event &&
         title == other.title &&
-        description == other.description;
+        description == other.description &&
+        child == other.child;
   }
 
   @override

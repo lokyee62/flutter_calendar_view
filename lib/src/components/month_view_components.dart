@@ -152,31 +152,32 @@ class FilledCell<T> extends StatelessWidget {
                       (index) => GestureDetector(
                         onTap: () =>
                             onTileTap?.call(events[index], events[index].date),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: events[index].color,
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          margin: EdgeInsets.symmetric(
-                              vertical: 2.0, horizontal: 4.0),
-                          padding: const EdgeInsets.all(4.0),
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  events[index].title ?? '',
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                    color: events[index].color.accent,
-                                    fontSize: 14,
-                                  ),
-                                ),
+                        child: events[index].child ??
+                            Container(
+                              decoration: BoxDecoration(
+                                color: events[index].color,
+                                borderRadius: BorderRadius.circular(4.0),
                               ),
-                            ],
-                          ),
-                        ),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 2.0, horizontal: 4.0),
+                              padding: const EdgeInsets.all(4.0),
+                              alignment: Alignment.center,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      events[index].title ?? '',
+                                      overflow: TextOverflow.clip,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        color: events[index].color.accent,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                       ),
                     ),
                   ),

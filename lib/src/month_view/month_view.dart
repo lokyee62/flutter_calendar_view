@@ -105,7 +105,7 @@ class MonthView<T> extends StatefulWidget {
 
   final String locale;
 
-  final bool? isShowTapped;
+  final bool? isShowCurrentDate;
 
   final List<DateTime>? disabledDates;
 
@@ -138,7 +138,7 @@ class MonthView<T> extends StatefulWidget {
     this.onPageChange,
     this.onCellTap,
     this.onEventTap,
-    this.isShowTapped,
+    this.isShowCurrentDate,
     this.disabledDates,
     this.disabledWeekdays,
   }) : super(key: key);
@@ -180,13 +180,13 @@ class MonthViewState<T> extends State<MonthView<T>> {
 
   late List<String> _days;
 
-  late bool _isShowTapped;
-
-  late DateTime _selectedDate = DateTime.now();
+  late bool _isShowCurrentDate;
 
   late List<DateTime> _disabledDates;
 
   late List<int> _disabledWeekdays;
+
+  late TileTapCallback<T>? _onEventTap;
 
   @override
   void initState() {
@@ -242,11 +242,19 @@ class MonthViewState<T> extends State<MonthView<T>> {
     // from where user can see month and change month.
     _headerBuilder = widget.headerBuilder ?? _defaultHeaderBuilder;
 
-    _isShowTapped = widget.isShowTapped ?? false;
+    _isShowCurrentDate = widget.isShowCurrentDate ?? false;
 
     _disabledDates = widget.disabledDates ?? [];
 
     _disabledWeekdays = widget.disabledWeekdays ?? [];
+
+    _onEventTap = (d, dt) {
+      setState(() {
+        _currentDate = dt;
+      });
+
+      widget.onEventTap?.call(d, dt);
+    };
   }
 
   @override
@@ -321,7 +329,7 @@ class MonthViewState<T> extends State<MonthView<T>> {
                               key: ValueKey(date.toIso8601String()),
                               onCellTap: (list, dt) {
                                 setState(() {
-                                  _selectedDate = dt;
+                                  _currentDate = dt;
                                 });
                                 widget.onCellTap?.call(list, dt);
                               },
@@ -335,8 +343,8 @@ class MonthViewState<T> extends State<MonthView<T>> {
                               date: date,
                               minMonth: widget.minMonth,
                               showBorder: widget.showBorder,
-                              selectedDate: _selectedDate,
-                              isShowTapped: _isShowTapped,
+                              currentDate: _currentDate,
+                              isShowCurrentDate: _isShowCurrentDate,
                               disabledDates: _disabledDates,
                               disabledWeekdays: _disabledWeekdays,
                             ),
@@ -425,7 +433,7 @@ class MonthViewState<T> extends State<MonthView<T>> {
               ? Constants.white
               : Constants.offWhite,
       events: events,
-      onTileTap: widget.onEventTap as TileTapCallback<T>?,
+      onTileTap: _onEventTap as TileTapCallback<T>?,
     );
   }
 
@@ -516,10 +524,10 @@ class _MonthPageBuilder<T> extends StatelessWidget {
   final double width;
   final double height;
   final CellTapCallback<T>? onCellTap;
-  final DateTime selectedDate;
-  final bool isShowTapped;
+  final bool isShowCurrentDate;
   final List<DateTime> disabledDates;
   final List<int> disabledWeekdays;
+  final DateTime currentDate;
 
   const _MonthPageBuilder({
     Key? key,
@@ -534,10 +542,10 @@ class _MonthPageBuilder<T> extends StatelessWidget {
     required this.width,
     required this.height,
     required this.onCellTap,
-    required this.selectedDate,
-    required this.isShowTapped,
+    required this.isShowCurrentDate,
     required this.disabledDates,
     required this.disabledWeekdays,
+    required this.currentDate,
   }) : super(key: key);
 
   @override
@@ -570,8 +578,8 @@ class _MonthPageBuilder<T> extends StatelessWidget {
                 : null,
             child: Container(
               decoration: BoxDecoration(
-                border: monthDays[index].compareWithoutTime(selectedDate) &&
-                        isShowTapped
+                border: monthDays[index].compareWithoutTime(currentDate) &&
+                        isShowCurrentDate
                     ? Border.all(
                         color: Constants.headerBackground,
                         width: borderSize + 1,

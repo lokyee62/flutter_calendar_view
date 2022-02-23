@@ -20,7 +20,7 @@ class MonthViewWidget extends StatelessWidget {
       width: width,
       displayFormat: 'MMM y',
       locale: 'en',
-      isShowTapped: true,
+      isShowCurrentDate: true,
       disabledDates: [DateTime(2022, 2, 17)],
       disabledWeekdays: [2],
     );
