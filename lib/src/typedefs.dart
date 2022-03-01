@@ -12,6 +12,7 @@ typedef CellBuilder<T> = Widget Function(
   bool isToday,
   bool isInMonth,
   bool isEnabled,
+  bool isAfterMinMonth,
 );
 
 typedef EventTileBuilder<T> = Widget Function(

@@ -23,6 +23,7 @@ class MonthViewWidget extends StatelessWidget {
       isShowCurrentDate: true,
       disabledDates: [DateTime(2022, 2, 17)],
       disabledWeekdays: [2],
+      minMonth: DateTime.now(),
     );
   }
 }

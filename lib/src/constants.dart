@@ -21,7 +21,7 @@ class Constants {
   static const Color defaultBorderColor = Color(0xffdddddd);
   static const Color black = Color(0xff000000);
   static const Color white = Color(0xffffffff);
-  static const Color offWhite = Color(0xfff7f7f7);
+  static const Color offWhite = Color(0xfff8f8f8);
   static const Color grey = Color(0xffeeeeee);
   static const Color headerBackground = Colors.black26;
   static Color get randomColor {

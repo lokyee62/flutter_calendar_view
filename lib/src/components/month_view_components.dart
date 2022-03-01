@@ -85,6 +85,7 @@ class FilledCell<T> extends StatelessWidget {
 
   /// defines that [date] is in current month or not.
   final bool isInMonth;
+  final bool isDateDisabled;
 
   /// defines radius of highlighted date.
   final double highlightRadius;
@@ -102,6 +103,7 @@ class FilledCell<T> extends StatelessWidget {
     required this.date,
     required this.events,
     this.isInMonth = false,
+    this.isDateDisabled = false,
     this.shouldHighlight = false,
     this.backgroundColor = Colors.blue,
     this.highlightColor = Colors.black,
@@ -117,26 +119,29 @@ class FilledCell<T> extends StatelessWidget {
     return Container(
       color: backgroundColor,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             height: 5.0,
           ),
-          CircleAvatar(
-            radius: highlightRadius,
-            backgroundColor:
-                shouldHighlight ? highlightColor : Colors.transparent,
-            child: Text(
-              "${date.day}",
-              style: TextStyle(
-                color: shouldHighlight
-                    ? highlightedTitleColor
-                    : isInMonth
-                        ? titleColor
-                        : titleColor.withOpacity(0.4),
-                fontSize: 14,
-              ),
-            ),
-          ),
+          Padding(
+              padding: EdgeInsets.only(top: 5, left: 5),
+              child: CircleAvatar(
+                radius: highlightRadius,
+                backgroundColor:
+                    shouldHighlight ? highlightColor : Colors.transparent,
+                child: Text(
+                  "${date.day}",
+                  style: TextStyle(
+                    color: shouldHighlight
+                        ? highlightedTitleColor
+                        : isInMonth
+                            ? titleColor
+                            : titleColor.withOpacity(0.4),
+                    fontSize: 14,
+                  ),
+                ),
+              )),
           if (events.isNotEmpty)
             Expanded(
               child: Container(

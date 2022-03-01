@@ -252,7 +252,9 @@ class MonthViewState<T> extends State<MonthView<T>> {
       setState(() {
         _currentDate = dt;
       });
-
+      // final isAfterMinMonth = !(widget.minMonth != null &&
+      //     dt.isBefore(DateUtils.dateOnly(widget.minMonth!)));
+      //if (isAfterMinMonth)
       widget.onEventTap?.call(d, dt);
     };
   }
@@ -422,16 +424,18 @@ class MonthViewState<T> extends State<MonthView<T>> {
   }
 
   /// Default cell builder. Used when [widget.cellBuilder] is null
-  Widget _defaultCellBuilder<T>(
-      date, List<CalendarEventData<T>> events, isToday, isInMonth, isEnabled) {
+  Widget _defaultCellBuilder<T>(date, List<CalendarEventData<T>> events,
+      isToday, isInMonth, isEnabled, isAfterMinMonth) {
     return FilledCell<T>(
       date: date,
       shouldHighlight: isToday,
       backgroundColor: !isEnabled
           ? Constants.grey
-          : isInMonth
-              ? Constants.white
-              : Constants.offWhite,
+          : !isAfterMinMonth
+              ? Constants.offWhite
+              : isInMonth
+                  ? Constants.white
+                  : Constants.offWhite,
       events: events,
       onTileTap: _onEventTap as TileTapCallback<T>?,
     );
@@ -565,7 +569,7 @@ class _MonthPageBuilder<T> extends StatelessWidget {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           final events = controller.getEventsOnDay(monthDays[index]);
-          final isValidDate = !(minMonth != null &&
+          final isAfterMinMonth = !(minMonth != null &&
               monthDays[index].isBefore(DateUtils.dateOnly(minMonth!)));
           final isDisabledDate =
               disabledDates.contains(DateUtils.dateOnly(monthDays[index]));
@@ -573,9 +577,10 @@ class _MonthPageBuilder<T> extends StatelessWidget {
               disabledWeekdays.contains(monthDays[index].weekday);
 
           return GestureDetector(
-            onTap: isValidDate
-                ? () => onCellTap?.call(events, monthDays[index])
-                : null,
+            onTap: //isAfterMinMonth
+                //?
+                () => onCellTap?.call(events, monthDays[index]),
+            //: null,
             child: Container(
               decoration: BoxDecoration(
                 border: monthDays[index].compareWithoutTime(currentDate) &&
@@ -595,10 +600,9 @@ class _MonthPageBuilder<T> extends StatelessWidget {
                 monthDays[index],
                 events,
                 monthDays[index].compareWithoutTime(DateTime.now()),
-                monthDays[index].month == date.month &&
-                    !isDisabledDate &&
-                    !isDisabledWeekday,
-                isValidDate,
+                monthDays[index].month == date.month,
+                !isDisabledDate && !isDisabledWeekday,
+                isAfterMinMonth,
               ),
             ),
           );
